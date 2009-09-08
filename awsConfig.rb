@@ -1,4 +1,4 @@
 require 'rubygems'
 require 'right_aws'
-require 'creds.rb'
+require '../creds.rb'
 key,skey = getCreds
