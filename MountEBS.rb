@@ -45,7 +45,7 @@ end
         if (aws_id == volume_id)
 		status = vol[:aws_status]
 		print status
-		if (status == "available" || status == "completed"|| status == "in use")
+		if (status == "available" || status == "completed"|| status == "in-use")
 			#logfile.print "Status Returned: #{status} for vol: #{aws_id}\n"
 			print "Status Returned: #{status} for vol: #{aws_id}\n"
 			return 1
