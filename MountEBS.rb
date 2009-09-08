@@ -42,7 +42,7 @@ end
         aws_id = vol[:aws_id]
         if aws_id == volume_id
 		status = vol[:aws_status]
-		if (status == true)
+		if (status == "available")
 			return true
 		else
 			return false
