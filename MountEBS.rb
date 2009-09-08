@@ -66,7 +66,7 @@ new_id = new_vol_from_snap[:aws_id]
 wait_for_volume(new_id,@ec2)
 logfile.print "Attempting to attache new volume: #{new_id} to current instance\n"
 @ec2.attach_volume(new_id,instance_id,'/dev/sdp')
-sleep 1
+wait_for_volume(new_id,@ec2)
 logfile.print "Attempting to mount all volumes\n"
 `mount -a`
 
