@@ -49,7 +49,7 @@ sleep 30
 
 logfile.print "Deleting Volume\n"
 @ec2.delete_volume(my_volume)
-sleep 30
+#sleep 30
 logfile.print "Finished on #{Time.now}\n"
 
 
