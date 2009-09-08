@@ -8,6 +8,8 @@ key,skey = getCreds
 logfile = File.new("/var/log/ebs.log", "a")
 #logfile.print "#{Time.now}"
 
+
+
 #  clone volumes from this instance
 master_instance = 'i-28a05d40'
 master_volume = 'vol-0dd62164'
@@ -19,35 +21,47 @@ instance_id = Net::HTTP.get_response(URI.parse(url)).body
 logfile.print "MountEBS: #{Time.now}\tCurrent Instance ID: #{instance_id}\n"
 @ec2 = RightAws::Ec2.new(key,skey)
 
+def wait_for_volume(volume_id,@ec2)
+
+test = false
+ while test
+	test = check_volume_status(volume_id,@ec2)
+	sleep 1
+ end
+
+end
+
+def check_volume_status(volume_id,@ec2)
+all_volumes = @ec2.describe_volumes
+ for vol in all_volumes
+        aws_id = vol[:aws_id]
+        if aws_id == volume_id
+		status = vol[:aws_status]
+		if (status == true)
+			return true
+		else
+			return false
+		end
+                logfile.print "-"
+       end
+ end
+end
 
 #ec2.create_snapshot('vol-898a6fe0')
-mounted_volumes = []
-#all_volumes = @ec2.describe_volumes
-#for vol in all_volumes
-	#instance = vol[:aws_instance_id]
-	#if instance == master_instance
-		#logfile.print "Found Master Instance: volume id: #{vol[:aws_id]}.  "
-		#mounted_volumes << vol[:aws_id]
-	#end
-#end
 
-#for vol in mounted_volumes
-	logfile.print "Creating Snapshot: \n"
-	#snap = @ec2.create_snapshot(vol)
-	snap = @ec2.create_snapshot(master_volume)
-	sleep 30
-	snap_id = snap[:aws_id]
-	# ec2.create_volume('snap-000000', 10, zone)
-	zone = "us-east-1b"
-	logfile.print "Converting Snapshot( #{snap_id} ) to Volume\n"
-	new_vol_from_snap = @ec2.create_volume(snap_id, 1, zone)
-	sleep 30
-	@ec2.delete_snapshot(snap_id)
-	new_id = new_vol_from_snap[:aws_id]
-	sleep 30
-	logfile.print "Attempting to attache new volume: #{new_id} to current instance\n"
-	@ec2.attach_volume(new_id,instance_id,'/dev/sdp')
-#end
+logfile.print "Creating Snapshot: \n"
+snap = @ec2.create_snapshot(master_volume)
+sleep 30
+snap_id = snap[:aws_id]
+zone = "us-east-1b"
+logfile.print "Converting Snapshot( #{snap_id} ) to Volume\n"
+new_vol_from_snap = @ec2.create_volume(snap_id, 1, zone)
+@ec2.delete_snapshot(snap_id)
+new_id = new_vol_from_snap[:aws_id]
+wait_for_volume(new_id,@ec2)
+logfile.print "Attempting to attache new volume: #{new_id} to current instance\n"
+@ec2.attach_volume(new_id,instance_id,'/dev/sdp')
+sleep 1
 logfile.print "Attempting to mount all volumes\n"
 `mount -a`
 
