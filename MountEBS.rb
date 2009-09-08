@@ -32,7 +32,12 @@ test = false
 end
 
 def check_volume_status(volume_id,@ec2)
-all_volumes = @ec2.describe_volumes
+all_volumes = []
+if (volume_id =~ /^snap)
+	all_volumes = @ec2.describe_snapshots
+elsif (volume_id =~ /^id)
+	all_volumes = @ec2.describe_volumes
+end
  for vol in all_volumes
         aws_id = vol[:aws_id]
         if aws_id == volume_id
@@ -51,8 +56,8 @@ end
 
 logfile.print "Creating Snapshot: \n"
 snap = @ec2.create_snapshot(master_volume)
-sleep 30
 snap_id = snap[:aws_id]
+wait_for_volume(snap_id,@ec2)
 zone = "us-east-1b"
 logfile.print "Converting Snapshot( #{snap_id} ) to Volume\n"
 new_vol_from_snap = @ec2.create_volume(snap_id, 1, zone)
