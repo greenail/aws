@@ -2,8 +2,9 @@
 
 require 'rubygems'
 require 'right_aws'
-require '../creds.rb'
+require '/root/creds.rb'
 key,skey = getCreds
+require '/root/aws/sAws_tools.rb'
 `mkdir /ebs`
 logfile = File.new("/var/log/ebs.log", "a")
 #logfile.print "#{Time.now}"
