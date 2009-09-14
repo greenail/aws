@@ -16,7 +16,7 @@ am = My_AMI.new(sdb,"merb",instance_id)
 eip = am.eip
 if (eip)
 	#associate_address(instance_id, public_ip) 
-	@ect.associate_address(instance_id,eip)
+	@ec2.associate_address(instance_id,eip)
 end
 
 hostname = am.hostname
