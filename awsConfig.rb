@@ -25,4 +25,5 @@ if (hostname)
 	`hostname #{hostname} `
 end
 `/etc/init.d/nginx start`
+`/etc/init.d/monit restart`
 
