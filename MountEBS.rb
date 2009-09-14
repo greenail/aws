@@ -45,9 +45,14 @@ logfile.print "Attempting to mount all volumes\n"
 
 sb = SdbBrowser.new()
 lookup_mami = sb.get_mami("lookup",instance_id)
-iname = sb.get_mami(type,lookup_mami)
-mami = sb.get_mami(type,iname)
-mami.ebs_vol = new_id
+if (lookup_mami)
+	logfile.print "Found instance name: #{lookup_mami}"
+	iname = sb.get_mami(type,lookup_mami)
+	mami = sb.get_mami(type,iname)
+	mami.ebs_vol = new_id
+else
+	logfile.print "Could not find Meta AMI Info"
+end
 
 
 
