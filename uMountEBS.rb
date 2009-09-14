@@ -4,7 +4,6 @@ require 'rubygems'
 require 'right_aws'
 require '../creds.rb'
 key,skey = getCreds
-exit unless is_a_clone
 logfile = File.new("/var/log/ebs.log", "a")
 #logfile.print "#{Time.now}"
 
