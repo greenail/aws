@@ -11,9 +11,14 @@ sdb = RightAws::SdbInterface.new(key,skey)
 
 url = 'http://169.254.169.254/2008-02-01/meta-data/instance-id'
 instance_id = Net::HTTP.get_response(URI.parse(url)).body
+
+puts instance_id
+
 lookup_table = My_AMI.new(sdb,"lookup",instance_id)
 iname = lookup_table.cname
+puts iname
 type = lookup_table.type
+puts type
 am = My_AMI.new(sdb,type,iname)
 exit 1 unless am
 
