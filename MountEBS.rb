@@ -5,6 +5,7 @@ require 'right_aws'
 require '/root/creds.rb'
 key,skey = getCreds
 require '/root/aws/sAws_tools.rb'
+require '/root/aws/lib/My_Ami.rb'
 `mkdir /ebs`
 logfile = File.new("/var/log/ebs.log", "a")
 #logfile.print "#{Time.now}"
@@ -41,6 +42,15 @@ logfile.print "Attempting to attache new volume: #{new_id} to current instance\n
 @ec2.attach_volume(new_id,instance_id,'/dev/sdp')
 wait_for_volume(new_id,@ec2)
 logfile.print "Attempting to mount all volumes\n"
+
+sb = SdbBrowser.new()
+lookup_mami = sb.get_mami("lookup",instance_id)
+iname = sb.get_mami(type,lookup_mami)
+mami = sb.get_mami(type,iname)
+mami.ebs_vol = new_id
+
+
+
 sleep 5
 `mount -a`
 

@@ -24,6 +24,15 @@ if (hostname)
 	`echo #{hostname} > /etc/hostname`	
 	`hostname #{hostname} `
 end
-`/etc/init.d/nginx start`
-`/etc/init.d/monit restart`
-
+is_merb = false
+if (am.name = "merb")
+	is_merb = true
+end
+if (is_merb)
+	ip = "/etc/init.d"
+	`#{ip}/nginx start`
+	`#{ip}/monit restart`
+	`#{ip}/collectd start`
+	
+	sleep 5
+end

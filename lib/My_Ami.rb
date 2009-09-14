@@ -3,7 +3,7 @@ require 'right_aws'
 
 
 class My_AMI
-attr_accessor :hostname, :instance_id, :name
+#attr_accessor :hostname, :instance_id, :name
 def initialize(sdb,domain, name)
 	@sdb = sdb
 	@domain = domain
@@ -14,7 +14,7 @@ def initialize(sdb,domain, name)
 	puts "Domain List: "
 	for d in domains
 		puts "\t#{d}"
-		if (d = domain)	
+		if (d == domain)	
 			found = true	
 			puts "Found Domain, skipping Domain creation"
 		end
@@ -112,6 +112,17 @@ def cname=(cname)
         @meta['cname'] = cname
         @sdb.put_attributes(@domain, @name, @meta,:replace)
 end
+def app
+        meta = @sdb.get_attributes(@domain,@name)
+        attributes = meta[:attributes]
+        type = attributes['type']
+
+end
+def app=(app)
+        @meta['app'] = app
+        @sdb.put_attributes(@domain, @name, @meta,:replace)
+end
+
 def security_group
         meta = @sdb.get_attributes(@domain,@name)
         attributes = meta[:attributes]
