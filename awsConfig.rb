@@ -11,7 +11,11 @@ sdb = RightAws::SdbInterface.new(key,skey)
 
 url = 'http://169.254.169.254/2008-02-01/meta-data/instance-id'
 instance_id = Net::HTTP.get_response(URI.parse(url)).body
-am = My_AMI.new(sdb,"merb",instance_id)
+lookup_table = My_AMI.new(sdb,"lookup",instance_id)
+iname = lookup_table.cname
+type = lookup_table.type
+am = My_AMI.new(sdb,type,iname)
+exit 1 unless am
 
 eip = am.eip
 if (eip)
@@ -25,7 +29,7 @@ if (hostname)
 	`hostname #{hostname} `
 end
 is_merb = false
-if (am.name = "merb")
+if (am.cname =~ /merb\d/)
 	is_merb = true
 end
 if (is_merb)

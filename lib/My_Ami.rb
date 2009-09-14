@@ -32,6 +32,15 @@ def print_meta
 		puts "#{k}: Values: #{attributes[k]}" unless k == "attributes"
 	end
 end
+def type
+	meta = @sdb.get_attributes(@domain,@name)
+	type = attributes['type']
+end
+def type= (type)
+	@meta['type'] = type
+        @sdb.put_attributes(@domain, @name, @meta,:replace)
+
+end
 def instance_id
 	meta = @sdb.get_attributes(@domain,@name)
 	#puts meta.keys
@@ -115,7 +124,7 @@ end
 def app
         meta = @sdb.get_attributes(@domain,@name)
         attributes = meta[:attributes]
-        type = attributes['type']
+        app = attributes['app']
 
 end
 def app=(app)
