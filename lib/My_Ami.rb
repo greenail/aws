@@ -34,7 +34,7 @@ def print_meta
 end
 def type
 	meta = @sdb.get_attributes(@domain,@name)
-	type = attributes['type']
+	type = meta['type']
 end
 def type= (type)
 	@meta['type'] = type
