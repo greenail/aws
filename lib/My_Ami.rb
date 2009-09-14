@@ -102,6 +102,28 @@ def ebs_vol=(ebs_vol)
 	@meta['ebs_vol'] = ebs_vol
         @sdb.put_attributes(@domain, @name, @meta,:replace)
 end
+def cname
+        meta = @sdb.get_attributes(@domain,@name)
+        attributes = meta[:attributes]
+        cname = attributes['cname']
+
+end
+def cname=(cname)
+        @meta['cname'] = cname
+        @sdb.put_attributes(@domain, @name, @meta,:replace)
+end
+def security_group
+        meta = @sdb.get_attributes(@domain,@name)
+        attributes = meta[:attributes]
+        security_group = attributes['security_group']
+
+end
+def security_group=(security_group)
+        @meta['security_group'] = security_group
+        @sdb.put_attributes(@domain, @name, @meta,:replace)
+end
+
+
 
 end
 

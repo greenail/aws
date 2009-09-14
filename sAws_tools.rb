@@ -37,8 +37,15 @@ end
  end
 return false
 end
-
-def grab_meta_data
-
+def get_volumes(ec2)
+all_volumes = ec2.describe_volumes
+volumes = []
+for vol in all_volumes
+        instance = vol[:aws_instance_id]
+        if instance == instance_id
+                logfile.print "Found Master Instance: volume id: #{vol[:aws_id]}.\n"
+                my_volume += vol[:aws_id]
+        end
+return volumes
 end
 

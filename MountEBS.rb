@@ -41,6 +41,7 @@ logfile.print "Attempting to attache new volume: #{new_id} to current instance\n
 @ec2.attach_volume(new_id,instance_id,'/dev/sdp')
 wait_for_volume(new_id,@ec2)
 logfile.print "Attempting to mount all volumes\n"
+sleep 5
 `mount -a`
 
 
