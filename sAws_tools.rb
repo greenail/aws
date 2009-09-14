@@ -37,6 +37,7 @@ end
  end
 return false
 end
+
 def get_volumes(ec2)
 all_volumes = ec2.describe_volumes
 volumes = []
@@ -46,6 +47,7 @@ for vol in all_volumes
                 logfile.print "Found Master Instance: volume id: #{vol[:aws_id]}.\n"
                 my_volume += vol[:aws_id]
         end
+end
 return volumes
 end
 
