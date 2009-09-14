@@ -36,6 +36,8 @@ logfile.print "This would be a good place to copy logs and stuff\n"
 
 
 logfile.print "Unmounting Data Partition: \n"
+`/etc/init.d/nginx stop`
+`/usr/bin/killall merb -9`
 `umount /ebs`
 logfile.print "Detaching Volume\n"
 @ec2.detach_volume(my_volume)
