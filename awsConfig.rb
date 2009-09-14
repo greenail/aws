@@ -24,4 +24,5 @@ if (hostname)
 	`echo #{hostname} > /etc/hostname`	
 	`hostname #{hostname} `
 end
+`/etc/init.d/nginx start`
 

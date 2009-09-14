@@ -28,9 +28,9 @@ for vol in all_volumes
                 my_volume = vol[:aws_id]
         end
 end
-if ( my_volume == "")
-	puts "No Volumes!!!"
-	logfile.print "No volume found!!! #{Time.now}\n" unless my_volume != ""
+if ( my_volume == master_volume)
+	puts "Dont' delete the master!!!!!"
+	logfile.print "dont' delete the master!!! #{Time.now}\n" 
 	exit 1
 end
 logfile.print "This would be a good place to copy logs and stuff\n"
