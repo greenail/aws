@@ -43,12 +43,12 @@ logfile.print "Attempting to attache new volume: #{new_id} to current instance\n
 wait_for_volume(new_id,@ec2)
 logfile.print "Attempting to mount all volumes\n"
 
-sb = SdbBrowser.new()
-lookup_mami = sb.get_mami("lookup",instance_id)
+sdb = RightAws::SdbInterface.new(key,skey)
+lookup_mami = My_AMI.new(sdb,"lookup",instance_id)
 if (lookup_mami)
-	logfile.print "Found instance name: #{lookup_mami}"
-	iname = sb.get_mami(type,lookup_mami)
-	mami = sb.get_mami(type,iname)
+	logfile.print "Found instance name: #{lookup_mami.cname}"
+	iname = lookup_mami.cname
+	mami = My_AMI.new(sdb,type,iname)
 	mami.ebs_vol = new_id
 else
 	logfile.print "Could not find Meta AMI Info"
