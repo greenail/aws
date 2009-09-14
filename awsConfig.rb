@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'right_aws'
 require '../creds.rb'
+require 'lib/My_Ami.rb'
 key,skey = getCreds
 `touch /root/itworked.txt`
 
