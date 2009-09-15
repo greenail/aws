@@ -51,6 +51,7 @@ if (is_merb)
 	`#{ip}/nginx start`
 	`#{ip}/monit restart`
 	`#{ip}/collectd start`
+	`elb-register-instances-with-lb schoch-lb --instances #{instance_id}`
 	
 	sleep 5
 end
