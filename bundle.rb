@@ -26,10 +26,18 @@ result = `ec2-upload-bundle -b #{bucket} -m /mnt/bundleimage/image.manifest.xml 
 
 puts result 
 
-url = 'http://169.254.169.254/2008-02-01/meta-data/ami-id'
-old_image = Net::HTTP.get_response(URI.parse(url)).body
-@ec2.deregister_image(old_image)
-@ec2.register_image("#{bucket}/image.manifest.xml")
+#url = 'http://169.254.169.254/2008-02-01/meta-data/ami-id'
+#old_image = Net::HTTP.get_response(URI.parse(url)).body
+
+result = @ec2.describe_images_by_owner('self')
+for r in result
+	if ( r[:aws_location] == "#{bucket}/image.manifest.xml" )
+		@ec2.deregister_image(r[:aws_id])
+	end
+end
+
+image = @ec2.register_image("#{bucket}/image.manifest.xml")
+puts image
 
 
 
