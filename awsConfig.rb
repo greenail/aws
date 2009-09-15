@@ -42,7 +42,7 @@ if (hostname)
 	logfile.print result + "\n"
 end
 is_merb = false
-if (am.cname =~ /merb\d/)
+if (am.cname.to_s =~ /merb\d/)
 	is_merb = true
 end
 if (is_merb)
