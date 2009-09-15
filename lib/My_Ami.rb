@@ -3,7 +3,7 @@ require 'right_aws'
 
 
 class My_AMI
-#attr_accessor :hostname, :instance_id, :name
+attr_accessor :domain, :name
 def initialize(sdb,domain, name)
 	@sdb = sdb
 	@domain = domain
@@ -32,14 +32,13 @@ def print_meta
 		puts "#{k}: Values: #{attributes[k]}" unless k == "attributes"
 	end
 end
-def type
+def ami_type
 	meta = @sdb.get_attributes(@domain,@name)
-	type = meta['type']
+	type = meta['ami_type']
 end
-def type= (type)
-	@meta['type'] = type
+def ami_type=(ami_type)
+	@meta['ami_type'] = ami_type
         @sdb.put_attributes(@domain, @name, @meta,:replace)
-
 end
 def instance_id
 	meta = @sdb.get_attributes(@domain,@name)

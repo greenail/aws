@@ -16,13 +16,13 @@ logfile.print "\nInstance ID: #{instance_id}"
 lookup_table = My_AMI.new(sdb,"lookup",instance_id)
 iname = lookup_table.cname
 logfile.print " Index Name: #{iname}"
-type = lookup_table.type
-if (!type)
+ami_type = lookup_table.ami_type
+if (!ami_type)
 	logfile.print "Could not find instance type Exiting"
 	exit 1
 end
-logfile.print " AMI Type: #{type}\n"
-am = My_AMI.new(sdb,type,iname)
+logfile.print " AMI Type: #{ami_type}\n"
+am = My_AMI.new(sdb,ami_type,iname)
 exit 1 unless am
 
 eip = am.eip
