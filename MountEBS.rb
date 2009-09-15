@@ -13,7 +13,6 @@ logfile = File.new("/var/log/ebs.log", "a")
 
 
 #  clone volumes from this instance
-master_instance = 'i-28a05d40'
 master_volume = 'vol-0dd62164'
 
 
@@ -41,12 +40,12 @@ logfile.print "Deleting old snapshot\n"
 logfile.print "Attempting to attache new volume: #{new_id} to current instance\n"
 @ec2.attach_volume(new_id,instance_id,'/dev/sdp')
 wait_for_volume(new_id,@ec2,logfile)
-logfile.print "Attempting to mount all volumes\n"
+logfile.print "Volume Attached\n"
 
 sdb = RightAws::SdbInterface.new(key,skey)
 lookup_mami = My_AMI.new(sdb,"lookup",instance_id)
 if (lookup_mami)
-	logfile.print "Found instance name: #{lookup_mami.cname}"
+	logfile.print "Found instance name: #{lookup_mami.cname}, adding EBS meta data"
 	iname = lookup_mami.cname
 	ami_type = lookup_mami.ami_type
 	mami = My_AMI.new(sdb,ami_type,iname)
@@ -57,7 +56,8 @@ end
 
 
 
-sleep 5
+sleep 10
+logfile.print "Attempting to mount all volumes\n"
 `mount -a`
 
 
