@@ -11,12 +11,12 @@ def initialize(sdb,domain, name)
 	@meta = {}
 	results = sdb.list_domains
 	found = false
-	puts "Domain List: "
+	#puts "Domain List: "
 	for d in results[:domains] 
-		puts "\t#{d}"
+		#puts "\t#{d}"
 		if (d == domain)	
 			found = true	
-			puts "Found Domain, skipping Domain creation"
+			puts "Found Domain: #{domain}, skipping Domain creation"
 		end
 	end
 	@sdb.create_domain(domain) unless found

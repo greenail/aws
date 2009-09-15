@@ -1,18 +1,18 @@
 require 'rubygems'
 require 'right_aws'
 
-def wait_for_volume(volume_id,ec2)
+def wait_for_volume(volume_id,ec2,logfile)
 
 test = false
  while (test == false)
-        test = check_volume_status(volume_id,ec2)
-        puts "test: #{test}"
+        test = check_volume_status(volume_id,ec2,logfile)
+        logfile.print "."
         sleep 1
  end
 puts "Waiting over ;)"
 end
 
-def check_volume_status(volume_id,ec2)
+def check_volume_status(volume_id,ec2,logfile)
 
 all_volumes = []
 if (volume_id =~ /^snap/)
@@ -24,13 +24,13 @@ end
         aws_id = vol[:aws_id]
         if (aws_id == volume_id)
                 status = vol[:aws_status]
-                print status
+                logfile.print "- #{status} -"
                 if (status == "available" || status == "completed"|| status == "in-use")
                         #logfile.print "Status Returned: #{status} for vol: #{aws_id}\n"
-                        print "Status Returned: #{status} for vol: #{aws_id}\n"
+                        logfile.print "Status Returned: #{status} for vol: #{aws_id}\n"
                         return 1
                 else
-                        print "-"
+                        logfile.print " sleep "
                         return false
                 end
        end

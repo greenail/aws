@@ -48,7 +48,8 @@ lookup_mami = My_AMI.new(sdb,"lookup",instance_id)
 if (lookup_mami)
 	logfile.print "Found instance name: #{lookup_mami.cname}"
 	iname = lookup_mami.cname
-	mami = My_AMI.new(sdb,type,iname)
+	ami_type = lookup_mami.ami_type
+	mami = My_AMI.new(sdb,ami_type,iname)
 	mami.ebs_vol = new_id
 else
 	logfile.print "Could not find Meta AMI Info"

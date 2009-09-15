@@ -15,6 +15,7 @@ master_volume = 'vol-0dd62164'
 
 url = 'http://169.254.169.254/2008-02-01/meta-data/instance-id'
 instance_id = Net::HTTP.get_response(URI.parse(url)).body
+
 logfile.print "uMountEBS: #{Time.now}\tCurrent Instance ID: #{instance_id}\n"
 @ec2 = RightAws::Ec2.new(key,skey)
 
@@ -23,7 +24,7 @@ all_volumes = @ec2.describe_volumes
 for vol in all_volumes
         instance = vol[:aws_instance_id]
         if instance == instance_id
-                logfile.print "Found Master Instance: volume id: #{vol[:aws_id]}.\n"
+                logfile.print "Found My Instance: volume id: #{vol[:aws_id]}.\n"
                 my_volume = vol[:aws_id]
         end
 end
@@ -40,6 +41,7 @@ logfile.print "Unmounting Data Partition: \n"
 `/usr/bin/killall merb -9`
 sleep 20
 `umount /ebs`
+sleep 5
 logfile.print "Detaching Volume\n"
 @ec2.detach_volume(my_volume)
 sleep 30
