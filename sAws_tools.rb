@@ -54,7 +54,7 @@ def mounter(path,logfile)
 	result = ""	
 	counter = 10
 	while (counter > 0)
-		IO.popen('mount #{path} 2>&1', "r+") do |pipe| 
+		IO.popen("mount #{path} 2>&1", "r+") do |pipe| 
 			result += pipe.read
 		end
 		logfile.print result
