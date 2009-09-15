@@ -29,18 +29,18 @@ logfile.print "MountEBS: #{Time.now}\tCurrent Instance ID: #{instance_id}\n"
 logfile.print "Creating Snapshot: \n"
 snap = @ec2.create_snapshot(master_volume)
 snap_id = snap[:aws_id]
-wait_for_volume(snap_id,@ec2)
+wait_for_volume(snap_id,@ec2,logfile)
 zone = "us-east-1b"
 logfile.print "Converting Snapshot( #{snap_id} ) to Volume\n"
 new_vol_from_snap = @ec2.create_volume(snap_id, 1, zone)
 new_id = new_vol_from_snap[:aws_id]
 logfile.print "Waiting for volume creation\n"
-wait_for_volume(new_id,@ec2)
+wait_for_volume(new_id,@ec2,logfile)
 logfile.print "Deleting old snapshot\n"
 @ec2.delete_snapshot(snap_id)
 logfile.print "Attempting to attache new volume: #{new_id} to current instance\n"
 @ec2.attach_volume(new_id,instance_id,'/dev/sdp')
-wait_for_volume(new_id,@ec2)
+wait_for_volume(new_id,@ec2,logfile)
 logfile.print "Attempting to mount all volumes\n"
 
 sdb = RightAws::SdbInterface.new(key,skey)
