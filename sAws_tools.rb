@@ -50,4 +50,27 @@ for vol in all_volumes
 end
 return volumes
 end
+def mounter(path,logfile)
+	result = ""	
+	counter = 10
+	while (counter > 0)
+		IO.popen('mount #{path} 2>&1', "r+") do |pipe| 
+			result += pipe.read
+		end
+		logfile.print result
+		result = ""
+		#puts "Running Command: df -h |grep #{path} 2>&1"
+		IO.popen("df -h |grep #{path} 2>&1", "r+") do |pipe| 
+			result += pipe.read
+		end
+		if (result == "")
+			print " Mounter Sleeping..."
+		else
+			puts result
+			counter = 0
+		end
+		sleep 1
+		counter -= 1
+	end
+end
 

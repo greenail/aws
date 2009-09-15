@@ -58,6 +58,5 @@ end
 
 sleep 10
 logfile.print "Attempting to mount all volumes\n"
-`mount -a`
-
+mounter("/ebs",logfile)
 
