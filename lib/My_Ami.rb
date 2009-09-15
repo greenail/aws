@@ -34,7 +34,8 @@ def print_meta
 end
 def ami_type
 	meta = @sdb.get_attributes(@domain,@name)
-	type = meta['ami_type']
+	attributes = meta[:attributes]
+        attributes['ami_type']
 end
 def ami_type=(ami_type)
 	@meta['ami_type'] = ami_type
@@ -42,9 +43,7 @@ def ami_type=(ami_type)
 end
 def instance_id
 	meta = @sdb.get_attributes(@domain,@name)
-	#puts meta.keys
 	attributes = meta[:attributes]
-	#puts attributes.keys
 	instance_id = attributes['instance_id']
 end
 def instance_id=(id)
