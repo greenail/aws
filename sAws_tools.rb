@@ -52,7 +52,7 @@ return volumes
 end
 def mounter(path,logfile)
 	result = ""	
-	counter = 10
+	counter = 20
 	while (counter > 0)
 		IO.popen("mount #{path} 2>&1", "r+") do |pipe| 
 			result += pipe.read
@@ -67,10 +67,13 @@ def mounter(path,logfile)
 			print " Mounter Sleeping..."
 		else
 			puts result
-			counter = 0
+			counter = -1
 		end
 		sleep 1
 		counter -= 1
+	end
+	if (counter == 0)
+		logfile.puts "Failed to mount #{path}"
 	end
 end
 
