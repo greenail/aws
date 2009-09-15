@@ -9,10 +9,10 @@ def initialize(sdb,domain, name)
 	@domain = domain
 	@name = name
 	@meta = {}
-	domains = sdb.list_domains
+	results = sdb.list_domains
 	found = false
 	puts "Domain List: "
-	for d in domains
+	for d in results[:domains] 
 		puts "\t#{d}"
 		if (d == domain)	
 			found = true	
