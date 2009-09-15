@@ -30,7 +30,7 @@ if (eip)
 	#associate_address(instance_id, public_ip) 
 	logfile.print "Attemptint to attach Elastic IP : #{eip} "
 	result = @ec2.associate_address(instance_id,eip)
-	logfile.print result + "\n"
+	logfile.print "#{result}\n"
 end
 
 hostname = am.hostname
