@@ -3,7 +3,7 @@ require 'right_aws'
 require '../creds.rb'
 require 'lib/My_Ami.rb'
 key,skey = getCreds
-logfile = File.new("/var/log/ebs.log", "a")
+logfile = File.new("/var/log/awsconfig.log", "a")
 
 @ec2 = RightAws::Ec2.new(key,skey)
 sdb = RightAws::SdbInterface.new(key,skey)
@@ -11,12 +11,16 @@ sdb = RightAws::SdbInterface.new(key,skey)
 url = 'http://169.254.169.254/2008-02-01/meta-data/instance-id'
 instance_id = Net::HTTP.get_response(URI.parse(url)).body
 
-logfile.print "Instance ID: #{instance_id}"
+logfile.print "\nInstance ID: #{instance_id}"
 
 lookup_table = My_AMI.new(sdb,"lookup",instance_id)
 iname = lookup_table.cname
 logfile.print " Index Name: #{iname}"
 type = lookup_table.type
+if (!type)
+	logfile.print "Could not find instance type Exiting"
+	exit 1
+end
 logfile.print " AMI Type: #{type}\n"
 am = My_AMI.new(sdb,type,iname)
 exit 1 unless am
