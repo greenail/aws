@@ -4,61 +4,53 @@ require 'right_aws'
 
 class MetaAMI
 
-attr_accessor :tname,:app,:eip,:ebs_vol,:hostname,:clone,:ebs_master
-def initialize(sdb,name,meta)
-    a = meta
-    @name = name
+attr_accessor :name,:app,:eip,:ebs_vol,:hostname,:clone,:ebs_master,:instance_number,:sdb
+#def initialize(sdb,name,meta)
+def initialize(sdb,options={})
     @sdb = sdb
-    @app, @type,@instance_number = parse_name(name)
-    @app = a[:app]
-    @eip = a[:eip]
-    @ebs_vol = a[:ebs_vol]
-    @ebs_master = a[:ebs_master]
-    @type = a[:type]
-    @clone = a[:clone]
-    #@ = [:]
-    #@ = [:]
+    @name = options["name"]
+    @app = options["app"]
+    @eip = options["eip"]
+    @type = options["type"]
+    @hostname = options["hostname"]
+    @instance_number = options["instance_number"]
+    @ebs_vol = options["ebs_vol"]
+    @ebs_master = options["ebs_master"]
+    @type = options["type"]
+    @clone = options["clone"]
+    @iid = options["iid"]
+    #@ = options[:]
+    #@ = options[:]
 
+    #  without these we can't pull the data from SDB
+    if (@app == nil || @type == nil || @instance_number == nil)
+	raise "Needed attributes not defined"
+    end
+
+    # test for name, if it is not in our options create it from input
+    if (@name == nil)
+	@name = "#{@app}:#{@type}:#{@instance_number}"
+    end
+    # test for instance id, if we have one create lookup record
+    if (@iid != nil)
+        @sdb.put_attributes("lookup",@iid,@name,:replace)
+    end
+    
+    # we need a test for the apps table
 end
 
-def initialize(sdb,type,instance_number,app)
-        @sdb = sdb
-        @domain = type
-	@instance_number = instance_number
-	@app = app
-	@type = type
-        @name = "#{@app}:#{@type}:#{@instance_number}"
-        results = sdb.list_domains
-        found = false
-        #puts "Domain List: "
-        for d in results[:domains]
-                #puts "\t#{d}"
-                if (d == @type)
-                        found = true
-                        puts "Found Domain: #{@type}, skipping Domain creation"
-                end
-        end
-        @sdb.create_domain(@type) unless found
-end
-def self.parse_name(name)
-    app, type,instance_number = name.split(':')
-end
+
 def self.get(name,sdb)
     app,type,instance_number = parse_name(name)
     meta = @sdb.get_attributes(type,name)
-    a = meta[:attributes]
-    #a = @meta[:attributes]
-    #@app = a[:app]
-    #@eip = a[:eip]
-    #@ebs_vol = a[:ebs_vol]
-    #@ebs_master = a[:ebs_master]
-    #@type = a[:type]
-    #@clone = a[:clone]
-    #@ = [:]
-    #@ = [:]
-    self.new(sdb,name,a)
+    options = meta[:attributes]
+    options["type"] = type
+    options["app"] = app
+    options["instance_number"] = instance_number
+    self.new(sdb,options)
 end
-def self.lookup
+def self.lookup(iid,sdb)
+
 end
 def self.cleanup
 end
