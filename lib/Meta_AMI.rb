@@ -5,6 +5,21 @@ require 'right_aws'
 class MetaAMI
 
 attr_accessor :tname,:app,:eip,:ebs_vol,:hostname,:clone,:ebs_master
+def initialize(sdb,name,meta)
+    a = meta
+    @name = name
+    @sdb = sdb
+    @app, @type,@instance_number = parse_name(name)
+    @app = a[:app]
+    @eip = a[:eip]
+    @ebs_vol = a[:ebs_vol]
+    @ebs_master = a[:ebs_master]
+    @type = a[:type]
+    @clone = a[:clone]
+    #@ = [:]
+    #@ = [:]
+
+end
 
 def initialize(sdb,type,instance_number,app)
         @sdb = sdb
@@ -26,22 +41,22 @@ def initialize(sdb,type,instance_number,app)
         @sdb.create_domain(@type) unless found
 end
 def self.parse_name(name)
-    @app, @type,@instance_number = name.split(':')
+    app, type,instance_number = name.split(':')
 end
 def self.get(name,sdb)
-    @sdb = sdb
-    parse_name(name)
-    @meta = @sdb.get_attributes(@type,name)
-    a = @meta[:attributes]
-    @app = a[:app]
-    @eip = [:eip]
-    @ebs_vol = [:ebs_vol]
-    @ebs_master = [:ebs_master]
-    @type = [:type]
-    @clone = [:clone]
+    app,type,instance_number = parse_name(name)
+    meta = @sdb.get_attributes(type,name)
+    a = meta[:attributes]
+    #a = @meta[:attributes]
+    #@app = a[:app]
+    #@eip = a[:eip]
+    #@ebs_vol = a[:ebs_vol]
+    #@ebs_master = a[:ebs_master]
+    #@type = a[:type]
+    #@clone = a[:clone]
     #@ = [:]
     #@ = [:]
-    return self
+    self.new(sdb,name,a)
 end
 def self.lookup
 end
