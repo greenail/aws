@@ -31,12 +31,11 @@ def initialize(sdb,options={})
     if (@name == nil)
 	@name = "#{@app}:#{@type}:#{@instance_number}"
     end
-    # test for instance id, if we have one create lookup record
-    if (@iid != nil)
-        @sdb.put_attributes("lookup",@iid,@name,:replace)
-    end
     
     # we need a test for the apps table
+end
+def put_lookup(iid)
+	@sdb.put_attributes("lookup",iid,{"name" => @name},:replace)
 end
 
 
@@ -50,7 +49,9 @@ def self.get(name,sdb)
     self.new(sdb,options)
 end
 def self.lookup(iid,sdb)
-
+    meta = sdb.get_attributes("lookup",iid)
+    a = meta[:attributes]
+    name = a["name"]
 end
 def self.cleanup
 end
