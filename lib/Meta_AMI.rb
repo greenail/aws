@@ -9,10 +9,12 @@ def initialize(sdb,options={})
     @sdb = sdb
     @name = options["name"]
     @app = options["app"]
-    @eip = options["eip"]
     @type = options["type"]
-    @hostname = options["hostname"]
     @instance_number = options["instance_number"]
+
+    # TODO need to do some meta programming here to make arbitrary list of attributes
+    @eip = options["eip"]
+    @hostname = options["hostname"]
     @ebs_vol = options["ebs_vol"]
     @ebs_master = options["ebs_master"]
     @type = options["type"]
@@ -75,7 +77,21 @@ def self.cleanup(ec2)
 end
 def self.create
 end
-def self.types
+def self.types(ec2)
+    # not sure how we do this query without new table with only types, may 
+    # want to put a bunch of this stuff in a single table with multiple things 
+    # like this.
+    #
+    # we can also drive this via @ec2.describe_images_by_owner('self')
+
+    result = ec2.describe_images_by_owner('self')
+    for r in result
+    	#puts "Testing: #{r[:aws_location]} against: -#{ami_type}-"
+        location =  r[:aws_location].to_s
+	base, crap = location.split('/')
+	u,type,crap = base.split('-')
+	puts "Type : #{type}"
+    end
 end
 def self.apps
 end
