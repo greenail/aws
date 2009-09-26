@@ -5,7 +5,6 @@ require 'right_aws'
 class MetaAMI
 
 attr_accessor :name,:app,:eip,:ebs_vol,:hostname,:clone,:ebs_master,:instance_number,:sdb
-#def initialize(sdb,name,meta)
 def initialize(sdb,options={})
     @sdb = sdb
     @name = options["name"]
@@ -53,7 +52,26 @@ def self.lookup(iid,sdb)
     a = meta[:attributes]
     name = a["name"]
 end
-def self.cleanup
+def self.cleanup(ec2)
+    # method to clean out instance ID's that don't exist from our reverse lookup table
+    instances = @sdb.select(["select * from lookup"])
+    for i in instances[:items]
+	for key in i.keys
+		instance =  ec2.describe_instances(key)[0]
+		if(instance)
+		    state = instance[:aws_state]
+		    puts "Checking State: #{state}"
+		    # TODO  need test for other states
+		    if (state != "running")
+			puts "Deleting lookup record for: #{key}"
+			@sdb.delete_attributes("lookup",key)
+		    end
+		else
+			puts "Deleting lookup record for: #{key}"
+                        @sdb.delete_attributes("lookup",key)	
+		end
+	end
+    end
 end
 def self.create
 end
@@ -67,6 +85,12 @@ def save
     @sdb.put_attributes(@type,@name,@meta,:replace)
 end
 def running?
+    if(@iip)
+	instance = @ec2.describe_instances(@iip)[0]
+	if (instance[:aws_state] == "running")
+		return true
+	end
+    end
 end
 def dprint
 puts "name: #{@name} hostname: #{@hostname} app: #{@app} eip: #{@eip} EBS: #{@ebs_vol} type: #{@type}"
