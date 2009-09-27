@@ -4,13 +4,20 @@ require 'right_aws'
 key,skey = getCreds
 
 
-exit "Usage bundle <your imagename>" unless ARGV[0]
+if (ARGV[0] == nil)
+	puts "Usage bundle <your imagename>" 
+	exit 1
+end
 `rm -rf /mnt/bundleimage`
 `mkdir /mnt/bundleimage`
 
-
+s3 = RightAws::S3.new(key,skey)
 bucket = "schoch-#{ARGV[0]}-ami"
-
+b = s3.bucket(bucket)
+if (b == nil)
+    b = RightAws::S3::Bucket.create(s3,bucket,true)
+    b.keys
+end
 @ec2 = RightAws::Ec2.new(key,skey)
 url = 'http://169.254.169.254/2008-02-01/meta-data/instance-id'
 instance_id = Net::HTTP.get_response(URI.parse(url)).body
