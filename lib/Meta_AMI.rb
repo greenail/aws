@@ -4,7 +4,7 @@ require 'right_aws'
 
 class MetaAMI
 
-attr_accessor :name,:app,:eip,:ebs_vol,:hostname,:clone,:ebs_master,:instance_number,:sdb
+attr_accessor :name,:app,:eip,:ebs_vol,:hostname,:clone,:ebs_master,:instance_number,:sdb,:instance_id
 def initialize(sdb,options={})
     @sdb = sdb
     @name = options["name"]
@@ -19,7 +19,7 @@ def initialize(sdb,options={})
     @ebs_master = options["ebs_master"]
     @type = options["type"]
     @clone = options["clone"]
-    @iid = options["iid"]
+    @instance_id = options["instance_id"]
     #@ = options[:]
     #@ = options[:]
 
@@ -37,6 +37,8 @@ def initialize(sdb,options={})
 end
 def put_lookup(iid)
 	@sdb.put_attributes("lookup",iid,{"name" => @name},:replace)
+	@instance_id = iid
+	self.save
 end
 
 
@@ -63,7 +65,7 @@ def self.cleanup(ec2)
 		if(instance)
 		    state = instance[:aws_state]
 		    puts "Checking State: #{state}"
-		    # TODO  need test for other states
+		    # TODO  need test for other states such as "pending"
 		    if (state != "running")
 			puts "Deleting lookup record for: #{key}"
 			@sdb.delete_attributes("lookup",key)
