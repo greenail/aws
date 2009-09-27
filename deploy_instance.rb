@@ -45,17 +45,15 @@ instance_id = results[0][:aws_instance_id]
 if (instance_id)
 	puts "Adding instance meta data for Instance: #{instance_id}"
 	puts "..."
-	am = Meta_AMI.new(sdb,{"type" => type,"app" => app,"instance_number" => instance_number})
-	lookup_table = My_AMI.new(sdb,"lookup",instance_id)
-	am.put_lookup(instance_id)
-	if (am)
-		am.put_lookup(instance_id)
-		am.security_group = ami_type
-		am.hostname = "merb1.stink.net"
-		am.eip = "174.129.23.27"
-		am.is_clone = "true"
-		am.app = app
-		am.instance_id = instance_id 
+	mami = MetaAMI.new(sdb,{"type" => type,"app" => app,"instance_number" => instance_number})
+	mami.put_lookup(instance_id)
+	if (mami)
+		mami.put_lookup(instance_id)
+		mami.hostname = "merb1.stink.net"
+		mami.eip = "174.129.23.27"
+		mami.clone = "false"
+		mami.app = app
+		mami.instance_id = instance_id 
 	else
 		puts "problem with ami meta data or sdb"
 	end
