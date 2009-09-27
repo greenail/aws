@@ -10,6 +10,7 @@ if (ARGV[0] == nil)
 end
 `rm -rf /mnt/bundleimage`
 `mkdir /mnt/bundleimage`
+`mkdir /ebs`
 
 s3 = RightAws::S3.new(key,skey)
 bucket = "schoch-#{ARGV[0]}-ami"
