@@ -45,6 +45,7 @@ instance_id = results[0][:aws_instance_id]
 if (instance_id)
 	puts "Adding instance meta data for Instance: #{instance_id}"
 	puts "..."
+	# TODO need to figure out why lack of domain does not throw an answer
 	mami = MetaAMI.new(sdb,{"type" => type,"app" => app,"instance_number" => instance_number})
 	mami.put_lookup(instance_id)
 	if (mami)

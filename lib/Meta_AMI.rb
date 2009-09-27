@@ -9,6 +9,7 @@ def initialize(sdb,options={})
     @sdb = sdb
     @name = options["name"]
     @app = options["app"]
+    # TODO need to check for domain, and create if it does not exist
     @type = options["type"]
     @instance_number = options["instance_number"]
 
