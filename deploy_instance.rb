@@ -55,6 +55,8 @@ if (instance_id)
 		mami.clone = "false"
 		mami.app = app
 		mami.instance_id = instance_id 
+		puts "Saving Meta AMI info"
+		mami.save
 	else
 		puts "problem with ami meta data or sdb"
 	end
